@@ -1,0 +1,31 @@
+---
+- hosts: fcrepo4
+  sudo: True
+
+  roles:
+    - proxy
+
+  tasks:
+    - apt: name={{item}} state=present update_cache=yes
+      with_items:
+        - python-software-properties
+        - git
+        - curl
+
+    - apt_key: id=EEA14886 url="http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC2518248EEA14886" state=present
+    #- apt_key: data="{{ lookup('file', 'files/webupd8team.gpg') }}" state=present
+    - apt_repository: repo='ppa:webupd8team/java' state=present
+    - shell: echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+    - apt:  name={{item}} state=present update_cache=yes
+      with_items:
+        - oracle-java7-installer
+        - oracle-java7-set-default
+    - command: update-alternatives --display java
+    # RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/environment
+
+    - apt_key: id=3DD9F856 url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB70731143DD9F856 state=present
+    - apt_repository: repo="ppa:natecarlson/maven3" state=present
+    - apt: name=maven3 state=present
+
+    - git: repo=https://github.com/futures/fcrepo4.git dest=/opt/fcrepo4
+    - command: chdir=/opt/fcrepo mvn3 install

@@ -1,0 +1,30 @@
+# order matters!
+---
+- hosts: all
+  sudo: True
+
+  tasks:
+    - name: remove proxy.sh from system
+      file: path=/etc/profile.d/proxy.sh state=absent
+
+    - name: remove proxy configuration from /etc/yum.conf
+      lineinfile: dest=/etc/yum.conf regexp="^proxy=" state=absent
+
+    - name: remove proxy configuration from /root/.curlrc
+      lineinfile: dest=/root/.curlrc regexp="^proxy = " state=absent
+
+    - name: remove proxy configuration from /root/.gemrc
+      lineinfile: dest=/root/.gemrc regexp="^gem.*--http-proxy" state=absent
+
+    - name: remove proxy configuration from /root/.pip/pip.conf
+      lineinfile: dest=/root/.pip/pip.conf regexp="^proxy =" state=absent
+
+    - name: remove ssh configuration from /root/.ssh/config
+      lineinfile: dest=/root/.ssh/config regexp="ProxyCommand nc -x" state=absent
+
+    - lineinfile: dest=/etc/environment regexp="^http_proxy= " state=absent
+    - lineinfile: dest=/etc/environment regexp="^https_proxy= " state=absent
+    - lineinfile: dest=/etc/environment regexp="^ftp_proxy= " state=absent
+    - lineinfile: dest=/etc/environment regexp="^HTTP_PROXY= " state=absent
+    - lineinfile: dest=/etc/environment regexp="^HTTPS_PROXY= " state=absent
+    - lineinfile: dest=/etc/environment regexp="^FTP_PROXY= " state=absent
