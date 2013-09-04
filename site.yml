@@ -25,7 +25,9 @@
 
     - apt_key: id=3DD9F856 url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB70731143DD9F856 state=present
     - apt_repository: repo="ppa:natecarlson/maven3" state=present
-    - apt: name=maven3 state=present
+    - apt: name=maven3 state=present update_cache=yes
+
+    - file: path=/opt state=directory
 
     - git: repo=https://github.com/futures/fcrepo4.git dest=/opt/fcrepo4
-    - command: chdir=/opt/fcrepo mvn3 install
+    - command: chdir=/opt/fcrepo4 mvn3 install
