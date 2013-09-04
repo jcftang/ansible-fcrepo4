@@ -28,3 +28,5 @@
     - lineinfile: dest=/etc/environment regexp="^HTTP_PROXY= " state=absent
     - lineinfile: dest=/etc/environment regexp="^HTTPS_PROXY= " state=absent
     - lineinfile: dest=/etc/environment regexp="^FTP_PROXY= " state=absent
+
+      file: path=~/.m2/settings.xml state=absent
